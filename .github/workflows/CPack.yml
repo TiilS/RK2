@@ -11,9 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '20'
+      
+      - name: Install CMake
+        run: sudo apt-get install -y cmake
+
       - name: Config ConceptualExample
         run: cmake ${{github.workspace}} -B ${{github.workspace}}/build -D PRINT_VERSION=1.0.0
 
@@ -27,9 +28,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: RK2-1.0.0-Linux.zip
-          path: RK2-1.0.0-Linux.zip
-      - name: Wait for artifact to be ready
-        run: sleep 10s
+          path: ${{github.workspace}}/build/RK2-1.0.0-Linux.zip
 
   create_release:
     needs: release
@@ -52,4 +51,5 @@ jobs:
           This is the first release of the project.
         draft: false
         prerelease: false
-        files: rk2-executable/*
+        files: rk2-executable/RK2-1.0.0-Linux.zip
+
