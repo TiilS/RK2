@@ -32,26 +32,43 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: RK2-1.0.0-Linux.zip
-          path: ${{github.workspace}}/build/example-1.0.0-Linux.tar.gz
+          name: package
+          path: ${{github.workspace}}/build/*.tar.gz
 
-  create_release:
-      needs: release 
-      runs-on: ubuntu-latest
-      steps:
-        - name: Download artifact
-          uses: actions/download-artifact@v2
-          with:
-              name: RK2-1.0.0-Linux.zip
-              path: rk2-executable
-        
-        - name: List downloaded artifact directory
-          run: ls -la rk2-executable
-  
-        - name: Create Release
-          id: create_release
-          uses: softprops/action-gh-release@v1
-          with:
-            files: rk2-executable/*.zip
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  create_tag_and_release:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: package
+          path: .
+
+      - name: List downloaded artifact directory
+        run: ls -la .
+
+      - name: Create Tag
+        id: create_tag
+        run: |
+          TAG_NAME="v1.0.0"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.0
+          release_name: Release v1.0.0
+          body: |
+            This is the first release of the project.
+          draft: false
+          prerelease: false
+          files: "*.tar.gz"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
