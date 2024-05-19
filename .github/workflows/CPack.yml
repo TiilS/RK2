@@ -19,6 +19,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y cmake g++ libgtest-dev
 
+    - name: Config ConceptualExample with tests
+      run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
+      
     - name: Build Gtest
       run: |
         cd /usr/src/gtest
@@ -28,25 +31,28 @@ jobs:
 
     - name: Create build directory
       run: |
-        rm -rf _build
-        mkdir _build
+        rm -rf build
+        mkdir build
 
     - name: Configure CMake
-      run: cmake -S . -B _build
+      run: cmake -S . -B build
 
     - name: Build project
-      run: cmake --build _build
+      run: cmake --build build
+
+    - name: Build ConceptualExample
+      run: cmake --build ${{github.workspace}}/build
 
     - name: Run tests
-      run: ./_build/сheck
+      run: build/check
 
     - name: Package with CPack
       run: |
-        cd _build
+        cd build
         cpack
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: myproject-artifact
-        path: _build/*.zip
+        path: build/*.zip
