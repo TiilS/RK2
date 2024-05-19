@@ -26,6 +26,12 @@ jobs:
       - name: Build source package
         run: cmake --build ${{github.workspace}}/build --target package_source
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: rk2-executable
+          path: RK2-1.0.0-Linux.zip
+      
       - name: Make a release
         uses: ncipollo/release-action@v1.11.0
         with:
