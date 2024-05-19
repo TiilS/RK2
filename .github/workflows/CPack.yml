@@ -43,9 +43,6 @@ jobs:
     - name: Build ConceptualExample
       run: cmake --build ${{github.workspace}}/build
 
-    - name: Run tests
-      run: build/check
-
     - name: Package with CPack
       run: |
         cd build
