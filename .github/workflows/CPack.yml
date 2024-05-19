@@ -23,13 +23,10 @@ jobs:
       - name: Build package
         run: cmake --build ${{github.workspace}}/build --target package
 
-      - name: Build source package
-        run: cmake --build ${{github.workspace}}/build --target package_source
-
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: rk2-executable
+          name: RK2-1.0.0-Linux.zip
           path: RK2-1.0.0-Linux.zip
 
   create_release:
@@ -39,7 +36,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: rk2-executable
+        name: RK2-1.0.0-Linux.zip
         path: rk2-executable
 
     - name: Create Release
