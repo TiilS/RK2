@@ -52,7 +52,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag: v1.0.5
+          tag_name: ${{ env.version }}
           files: "*.tar.gz"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
