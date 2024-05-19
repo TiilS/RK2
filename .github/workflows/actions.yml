@@ -3,10 +3,10 @@ name: Build and Package
 on:
   push:
     branches:
-      - master
+      - br1
   pull_request:
     branches:
-      - master
+      - br1
 
 jobs:
   build:
@@ -15,6 +15,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        ref: br1
+      
+    - name: Set up CMake
+      uses: cmake/action-setup@v2
       
     - name: Configure CMake
       run: cmake -S . -B build
@@ -26,11 +31,11 @@ jobs:
       run: make -C build install
 
     - name: Package with CPack
-      run: cmake -DCPACK_PROJECT_NAME=MyProject -DCPACK_GENERATOR=ZIP --build build && cmake --build build --target package
-      
+      run: cmake -DCPACK_PROJECT_NAME=MyProject -DCPACK_GENERATOR=ZIP --build build && cpack -G ZIP
+
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: rk2-executable
+        name: rk2-executable-br1
         path: RK2-1.0.0-Linux.zip
 
