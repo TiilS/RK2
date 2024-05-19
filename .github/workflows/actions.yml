@@ -1,21 +1,22 @@
-name: RK Build and Test
+name: Actions_for_tests
+on:
+ push:
+  branches: [master]
+ pull_request:
+  branches: [master]
+jobs: 
+ build_Linux:
+  runs-on: ubuntu-latest
+  steps:
+  - uses: actions/checkout@v4
+  - name: Adding gtest
+    run: git clone https://github.com/google/googletest.git third-party/gtest -b release-1.11.0
 
-on: push
+  - name: Config ConceptualExample with tests
+    run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+  - name: Build ConceptualExample
+    run: cmake --build ${{github.workspace}}/build
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Configure CMake
-      run: cmake -B build -S .
-
-    - name: Build
-      run: cmake --build build
-
-    - name: Run tests
-      run: ctest --output-on-failure --test-dir build
-
+  - name: Run tests
+    run: build/check
