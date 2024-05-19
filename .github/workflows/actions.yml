@@ -9,8 +9,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Configure CMake
-      run: cmake ..
+      run: cmake -B build -S .
 
     - name: Build
-      run: cmake --build .
-
+      run: cmake --build build
