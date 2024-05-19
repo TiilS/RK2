@@ -1,26 +1,25 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Set the project name
-project(AbstractClassVsInterface)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+option(BUILD_TESTS "Build tests" OFF)
 
-# Add executable
-add_executable(AbstractClassVsInterface 
-    Program.cpp 
-    ConceptualExample.cpp
-)
+if(BUILD_TESTS)                   
+  add_compile_options(--coverage) 
+endif()
 
-# Set C++ standard
-set_target_properties(AbstractClassVsInterface PROPERTIES
-    CXX_STANDARD 11
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO
-)
+project (ConceptualExample)
 
-enable_testing()
+add_library(ConceptualExample STATIC ${CMAKE_CURRENT_SOURCE_DIR}/ConceptualExample.cpp)
+target_include_directories(ConceptualExample PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/)
 
-add_subdirectory(third-party/gtest)
+target_link_libraries(ConceptualExample gcov)
 
-add_executable(tests test.cpp)
-target_link_libraries(tests gtest gtest_main)
-add_test(NAME MyTest COMMAND tests)
-
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(third-party/gtest)
+  file(GLOB ConceptualExample_TEST_SOURCES test.cpp)
+  add_executable(check ${ConceptualExample_TEST_SOURCES})
+  target_link_libraries(check ConceptualExample gtest_main)
+  add_test(NAME check COMMAND check)
+endif()
