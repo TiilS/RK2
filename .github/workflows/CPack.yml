@@ -7,49 +7,53 @@ on:
     branches: [master]
 
 jobs:
-  build-and-test:
+  release:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake g++ libgtest-dev
-
-    - name: Config ConceptualExample with tests
-      run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
+      - uses: actions/checkout@v4
       
-    - name: Build Gtest
-      run: |
-        cd /usr/src/gtest
-        sudo cmake .
-        sudo make
-        sudo cp lib/*.a /usr/lib
+      - name: Install CMake
+        run: sudo apt-get install -y cmake
 
-    - name: Create build directory
-      run: |
-        rm -rf build
-        mkdir build
+      - name: Config ConceptualExample
+        run: cmake ${{github.workspace}} -B ${{github.workspace}}/build -D PRINT_VERSION=1.0.0
 
-    - name: Configure CMake
-      run: cmake -S . -B build
+      - name: Build ConceptualExample
+        run: cmake --build ${{github.workspace}}/build
 
-    - name: Build project
-      run: cmake --build build
+      - name: Build package
+        run: cmake --build ${{github.workspace}}/build --target package
 
-    - name: Build ConceptualExample
-      run: cmake --build ${{github.workspace}}/build
+      - name: Package with CPack
+        run: |
+          cd build
+          cpack
 
-    - name: Package with CPack
-      run: |
-        cd build
-        cpack
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: RK2-1.0.0-Linux.zip
+          path: ${{github.workspace}}/build/example-1.0.0-Linux.tar.gz
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
+  create_release:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
       with:
-        name: myproject-artifact
-        path: build/*.zip
+        name: RK2-1.0.0-Linux.zip
+        path: rk2-executable
+
+    - name: Create Release
+      id: create_release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: v1.0.0
+        release_name: Release v1.0.0
+        body: |
+          This is the first release of the project.
+        draft: false
+        prerelease: false
+        files: rk2-executable/RK2-1.0.0-Linux.zip
