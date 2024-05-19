@@ -16,9 +16,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Set up CMake
-      uses: cmake/action-setup@v2
-      
     - name: Configure CMake
       run: cmake -S . -B build
       
