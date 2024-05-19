@@ -36,24 +36,22 @@ jobs:
           path: ${{github.workspace}}/build/example-1.0.0-Linux.tar.gz
 
   create_release:
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: RK2-1.0.0-Linux.zip
-        path: rk2-executable
-
-    - name: Create Release
-      id: create_release
-      uses: ncipollo/release-action@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: v1.0.0
-        release_name: Release v1.0.0
-        body: |
-          This is the first release of the project.
-        draft: false
-        prerelease: false
-        files: rk2-executable/RK2-1.0.0-Linux.zip
+      needs: release 
+      runs-on: ubuntu-latest
+      steps:
+        - name: Download artifact
+          uses: actions/download-artifact@v2
+          with:
+            name: rk2-executable
+            path: rk2-executable
+  
+        - name: List downloaded artifact directory
+          run: ls -la rk2-executable
+  
+        - name: Create Release
+          id: create_release
+          uses: softprops/action-gh-release@v1
+          with:
+            files: rk2-executable/*.zip
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
