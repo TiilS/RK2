@@ -14,4 +14,4 @@ target_link_libraries(example ConceptualExample)
 install(TARGETS example
     RUNTIME DESTINATION bin
 )
-include(CPack.cmale)
+include(CPack.cmake)
