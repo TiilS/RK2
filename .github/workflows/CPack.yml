@@ -42,9 +42,9 @@ jobs:
         - name: Download artifact
           uses: actions/download-artifact@v2
           with:
-            name: rk2-executable
-            path: rk2-executable
-  
+              name: RK2-1.0.0-Linux.zip
+              path: rk2-executable
+        
         - name: List downloaded artifact directory
           run: ls -la rk2-executable
   
