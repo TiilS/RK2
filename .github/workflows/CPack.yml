@@ -51,15 +51,12 @@ jobs:
         with:
           name: package
           path: .
-
-      - name: List downloaded artifact directory
-        run: ls -la .
-        
+          
       - name: Create Release
         id: create_release
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v1
         with:
-          tag: v1.0.0
-          artifacts: "rk2-executable/*.zip"
           files: "*.tar.gz"
-          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
