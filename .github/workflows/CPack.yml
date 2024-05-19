@@ -59,6 +59,7 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
+          tag: v1.0.0
           artifacts: "rk2-executable/*.zip"
           files: "*.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
