@@ -26,11 +26,11 @@ jobs:
       run: make -C build install
 
     - name: Package with CPack
-      run: cpack -G ZIP
+      run: cmake -DCPACK_PROJECT_NAME=MyProject -DCPACK_GENERATOR=ZIP --install build && cpack
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: rk2-executable
-        path: RK2_executable.zip
+        path: RK2-1.0.0-Linux.zip
 
