@@ -28,6 +28,8 @@ jobs:
         with:
           name: RK2-1.0.0-Linux.zip
           path: RK2-1.0.0-Linux.zip
+      - name: Wait for artifact to be ready
+        run: sleep 10s
 
   create_release:
     needs: release
