@@ -26,7 +26,7 @@ jobs:
       run: make -C build install
 
     - name: Package with CPack
-      run: cmake -DCPACK_PROJECT_NAME=MyProject -DCPACK_GENERATOR=ZIP --install build && cpack
+      run: cmake -DCPACK_PROJECT_NAME=MyProject -DCPACK_GENERATOR=ZIP --build build && cpack -G ZIP
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
