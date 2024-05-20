@@ -17,11 +17,11 @@ jobs:
   - name: Adding gtest
     run: git clone https://github.com/google/googletest.git third-party/gtest -b release-1.11.0
 
-  - name: Config
-    run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
-
   - name: Configure example
     run: cmake ${{github.workspace}} -B ${{github.workspace}}/build
+
+  - name: Config
+    run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
 
   - name: Build example
     run: cmake --build ${{github.workspace}}/build
