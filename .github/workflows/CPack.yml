@@ -28,6 +28,23 @@ jobs:
           cd ${{github.workspace}}/.build/
           sudo cpack
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: /packages/*.deb
+  create_tag_and_release:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: package
+          path: ${{github.workspace}}/.build/
+      
       - name: Make a release
         uses: ncipollo/release-action@v1.11.0
         with:
