@@ -1,30 +1,30 @@
 name: CPack
 
 on:
- push:
-  branches: [master]
- pull_request:
-  branches: [master]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs: 
- build_Linux:
+  build_Linux:
 
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  steps:
-  - uses: actions/checkout@v4
+    steps:
+    - uses: actions/checkout@v2
 
-  - name: Adding gtest
-    run: git clone https://github.com/google/googletest.git third-party/gtest -b release-1.11.0
+    - name: Adding gtest
+      run: git clone https://github.com/google/googletest.git third-party/gtest -b release-1.11.0
 
-  - name: Configure example
-    run: cmake ${{github.workspace}} -B ${{github.workspace}}/build
+    - name: Configure example
+      run: cmake ${{github.workspace}} -B ${{github.workspace}}/build
 
-  - name: Config
-    run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
+    - name: Config
+      run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
 
-  - name: Build example
-    run: cmake --build ${{github.workspace}}/build
-  
-  - name: Run tests
-    run: build/check
+    - name: Build example
+      run: cmake --build ${{github.workspace}}/build
+
+    - name: Run tests
+      run: ${{github.workspace}}/build/check
