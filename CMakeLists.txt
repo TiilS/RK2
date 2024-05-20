@@ -1,20 +1,22 @@
 cmake_minimum_required(VERSION 3.29)
 
-project(example)
-
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(ConceptualExample ${CMAKE_CURRENT_SOURCE_DIR}/ConceptualExample.cpp)
+option(BUILD_TESTS "Build tests" OFF)
+option(PACK "pack" OFF)
 
-add_executable(example ${CMAKE_CURRENT_SOURCE_DIR}/Program.cpp)
+project(Shapes)
+file(GLOB SOURCES "ConceptualExample.cpp" , "Program.cpp")
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(example ConceptualExample)
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(third-party/gtest)
+  file(GLOB TEST_SOURCES "test.cpp")
+  add_executable(check ${TEST_SOURCES})
+  target_link_libraries(check gtest_main)
+  add_test(NAME check COMMAND check)
+endif()
 
-install(TARGETS example
-    RUNTIME DESTINATION bin
-)
-
-set(CPACK_PACKAGE_VERSION 1.0.0)
-
-include(CPack)
+include(CPack.cmake)
